@@ -23,14 +23,13 @@
 #include <kernel/state.h>
 #include <renderer/state.h>
 
+#include <algorithm>
 #include <chrono>
 #include <motion/functions.h>
 #include <touch/functions.h>
 
 // Code heavily influenced by PPSSSPP's SceDisplay.cpp
 
-static constexpr int TARGET_FPS = 60;
-static constexpr int64_t TARGET_MICRO_PER_FRAME = 1000000LL / TARGET_FPS;
 // how many cycles do we need to see before we start predicting the next frame
 static constexpr int predict_threshold = 3;
 static constexpr int max_expected_swapchain_size = 6;
@@ -75,8 +74,10 @@ static void vblank_sync_thread(EmuEnvState &emuenv) {
                 }
             }
         }
+        // read every cycle so that changing the rate in the settings applies immediately
+        const int64_t micro_per_frame = 1000000LL / std::clamp(display.vblank_rate.load(), 15, 120);
         const auto time_ms = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
-        const auto time_left = TARGET_MICRO_PER_FRAME - (time_ms % TARGET_MICRO_PER_FRAME);
+        const auto time_left = micro_per_frame - (time_ms % micro_per_frame);
         std::this_thread::sleep_for(std::chrono::microseconds(time_left));
     }
 }
