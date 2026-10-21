@@ -876,9 +876,31 @@ void draw_settings_dialog(GuiState &gui, EmuEnvState &emuenv) {
         }
 
         // Vblank rate
-        ImGui::SliderInt(lang.gpu["vblank_rate"].c_str(), &config.vblank_rate, 30, 90, "%d Hz");
+        ImGui::PushID("Vblank rate");
+        ImGui::Text("%s", lang.gpu["vblank_rate"].c_str());
+        ImGui::SameLine();
+        const bool vblank_rate_at_min = config.vblank_rate <= 30;
+        if (vblank_rate_at_min)
+            ImGui::BeginDisabled();
+        if (ImGui::Button("<", ImVec2(20.f * SCALE.x, 0)))
+            --config.vblank_rate;
+        if (vblank_rate_at_min)
+            ImGui::EndDisabled();
+        ImGui::SameLine(0, 5 * SCALE.x);
+        ImGui::PushItemWidth(-25.f * SCALE.x);
+        ImGui::SliderInt("##vblank_rate", &config.vblank_rate, 30, 90, "%d Hz");
+        ImGui::PopItemWidth();
         if (ImGui::IsItemHovered())
             ImGui::SetTooltip("%s", lang.gpu["vblank_rate_description"].c_str());
+        ImGui::SameLine(0, 5 * SCALE.x);
+        const bool vblank_rate_at_max = config.vblank_rate >= 90;
+        if (vblank_rate_at_max)
+            ImGui::BeginDisabled();
+        if (ImGui::Button(">", ImVec2(20.f * SCALE.x, 0)))
+            ++config.vblank_rate;
+        if (vblank_rate_at_max)
+            ImGui::EndDisabled();
+        ImGui::PopID();
 
         if (emuenv.renderer->supported_mapping_methods_mask > 1 && !is_renderer_changed) {
             ImGui::Spacing();
