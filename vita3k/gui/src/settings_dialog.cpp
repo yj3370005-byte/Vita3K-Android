@@ -181,6 +181,7 @@ static bool get_custom_config(EmuEnvState &emuenv, const std::string &app_path) 
                 config.export_textures = gpu_child.attribute("export-textures").as_bool();
                 config.export_as_png = gpu_child.attribute("export-as-png").as_bool();
                 config.fps_hack = gpu_child.attribute("fps-hack").as_bool();
+                config.vblank_rate = gpu_child.attribute("vblank-rate").as_int(60);
             }
 
             // Load Audio Config
@@ -254,6 +255,7 @@ void init_config(GuiState &gui, EmuEnvState &emuenv, const std::string &app_path
         config.export_textures = emuenv.cfg.export_textures;
         config.export_as_png = emuenv.cfg.export_as_png;
         config.fps_hack = emuenv.cfg.fps_hack;
+        config.vblank_rate = emuenv.cfg.vblank_rate;
         config.audio_volume = emuenv.cfg.audio_volume;
         config.ngs_enable = emuenv.cfg.ngs_enable;
         config.pstv_mode = emuenv.cfg.pstv_mode;
@@ -353,6 +355,7 @@ static void save_config(GuiState &gui, EmuEnvState &emuenv) {
         gpu_child.append_attribute("export-textures") = config.export_textures;
         gpu_child.append_attribute("export-as-png") = config.export_as_png;
         gpu_child.append_attribute("fps-hack") = config.fps_hack;
+        gpu_child.append_attribute("vblank-rate") = config.vblank_rate;
 
         // Audio
         auto audio_child = config_child.append_child("audio");
@@ -393,6 +396,7 @@ static void save_config(GuiState &gui, EmuEnvState &emuenv) {
         emuenv.cfg.export_textures = config.export_textures;
         emuenv.cfg.export_as_png = config.export_as_png;
         emuenv.cfg.fps_hack = config.fps_hack;
+        emuenv.cfg.vblank_rate = config.vblank_rate;
         emuenv.cfg.audio_volume = config.audio_volume;
         emuenv.cfg.ngs_enable = config.ngs_enable;
         emuenv.cfg.pstv_mode = config.pstv_mode;
@@ -461,6 +465,7 @@ void set_config(EmuEnvState &emuenv, const std::string &app_path, bool custom) {
         emuenv.cfg.current_config.export_textures = emuenv.cfg.export_textures;
         emuenv.cfg.current_config.export_as_png = emuenv.cfg.export_as_png;
         emuenv.cfg.current_config.fps_hack = emuenv.cfg.fps_hack;
+        emuenv.cfg.current_config.vblank_rate = emuenv.cfg.vblank_rate;
         emuenv.cfg.current_config.audio_volume = emuenv.cfg.audio_volume;
         emuenv.cfg.current_config.ngs_enable = emuenv.cfg.ngs_enable;
         emuenv.cfg.current_config.pstv_mode = emuenv.cfg.pstv_mode;
@@ -508,6 +513,7 @@ void set_config(EmuEnvState &emuenv, const std::string &app_path, bool custom) {
     emuenv.renderer->get_texture_cache()->set_replacement_state(emuenv.cfg.current_config.import_textures, emuenv.cfg.current_config.export_textures, emuenv.cfg.current_config.export_as_png);
     emuenv.renderer->set_async_compilation(emuenv.cfg.current_config.async_pipeline_compilation);
     emuenv.display.fps_hack = emuenv.cfg.current_config.fps_hack;
+    emuenv.display.vblank_rate = emuenv.cfg.current_config.vblank_rate;
 
     // No change it if app already running
     if (emuenv.io.title_id.empty()) {

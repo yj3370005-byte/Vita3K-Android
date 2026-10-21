@@ -75,6 +75,9 @@ struct DisplayState {
     // or run twice as fast (if they only rely on these function calls for their timings)
     bool fps_hack = false;
 
+    // emulated vblank rate in Hz (60 on real hardware), read by the vblank thread on every cycle
+    std::atomic<int> vblank_rate{ 60 };
+
     // should contain the list of sync objects / swapchain images (in the order they appear in the cycle)
     std::vector<PredictedDisplayFrame> predicted_frames;
     // position in the predicted_frame cycle (the -1 is needed)

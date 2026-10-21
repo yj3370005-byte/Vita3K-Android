@@ -143,6 +143,7 @@ public:
         bool export_textures = false;
         bool export_as_png = false;
         bool fps_hack = false;
+        int vblank_rate = 60;
         bool stretch_the_display_area = false;
         bool show_touchpad_cursor = true;
         bool psn_signed_in = false;
