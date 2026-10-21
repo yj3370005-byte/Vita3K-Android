@@ -571,7 +571,9 @@ struct LangState {
             { "spirv_shader_description", "Pass generated Spir-V shader directly to driver.\nNote that some beneficial extensions will be disabled,\nand not all GPUs are compatible with this." },
             { "clean_shaders", "Clean Shaders Cache and Log" },
             { "fps_hack", "FPS Hack" },
-            { "fps_hack_description", "Game hack which allows some games running at 30 FPS to run at 60 FPS on the emulator.\nNote that this is a hack and will only work on some games.\nOn other games, it may have no effect or make them run twice as fast." }
+            { "fps_hack_description", "Game hack which allows some games running at 30 FPS to run at 60 FPS on the emulator.\nNote that this is a hack and will only work on some games.\nOn other games, it may have no effect or make them run twice as fast." },
+            { "vblank_rate", "Vblank Rate" },
+            { "vblank_rate_description", "Emulated vertical blank rate. Default: 60 Hz (same as the real console).\nGames timed on vblank run at (rate / 60)x speed.\nWith FPS Hack enabled, 30 FPS games run at (rate / 30)x speed, e.g. 45 Hz = 1.5x." }
         };
         std::map<std::string, std::string> audio = {
             { "title", "Audio" },

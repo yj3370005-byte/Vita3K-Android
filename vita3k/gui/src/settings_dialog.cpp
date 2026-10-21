@@ -875,6 +875,11 @@ void draw_settings_dialog(GuiState &gui, EmuEnvState &emuenv) {
             ImGui::SetTooltip("%s", lang.gpu["fps_hack_description"].c_str());
         }
 
+        // Vblank rate
+        ImGui::SliderInt(lang.gpu["vblank_rate"].c_str(), &config.vblank_rate, 30, 90, "%d Hz");
+        if (ImGui::IsItemHovered())
+            ImGui::SetTooltip("%s", lang.gpu["vblank_rate_description"].c_str());
+
         if (emuenv.renderer->supported_mapping_methods_mask > 1 && !is_renderer_changed) {
             ImGui::Spacing();
             ImGui::Separator();
