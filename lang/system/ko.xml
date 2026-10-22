@@ -361,11 +361,242 @@
 	</settings>
 
 	<settings_dialog name="설정">
+		<core name="코어">
+			<modules_mode>모듈 모드</modules_mode>
+			<modules_list>모듈 목록</modules_list>
+			<select_modules>사용할 모듈을 선택하십시오.</select_modules>
+			<search_modules>모듈 검색</search_modules>
+			<clear_list>목록 비우기</clear_list>
+			<no_modules>모듈이 없습니다.
+최신 PS Vita 펌웨어를 다운로드해 설치해 주십시오.</no_modules>
+			<refresh_list>목록 새로 고침</refresh_list>
+		</core>
+		<cpu>
+			<unicorn>Unicorn (지원 중단)</unicorn>
+			<cpu_backend>CPU 백엔드</cpu_backend>
+			<select_cpu_backend>사용할 CPU 백엔드를 선택하십시오.</select_cpu_backend>
+			<cpu_opt>최적화 사용</cpu_opt>
+			<cpu_opt_description>체크하면 추가 CPU JIT 최적화를 사용합니다.</cpu_opt_description>
+		</cpu>
+		<gpu>
+			<reset>초기화</reset>
+			<backend_renderer>백엔드 렌더러</backend_renderer>
+			<select_backend_renderer>사용할 백엔드 렌더러를 선택하십시오.</select_backend_renderer>
+			<gpu>GPU (재시작 후 적용)</gpu>
+			<select_gpu>Vita3K가 사용할 GPU를 선택하십시오.</select_gpu>
+			<standard>표준</standard>
+			<high>높음</high>
+			<renderer_accuracy>렌더러 정확도</renderer_accuracy>
+			<v_sync>수직 동기화 (V-Sync)</v_sync>
+			<v_sync_description>V-Sync를 끄면 일부 게임의 속도 문제가 해결될 수 있습니다.
+화면 찢어짐을 막으려면 켜 두는 것을 권장합니다.</v_sync_description>
+			<disable_surface_sync>서피스 동기화 끄기</disable_surface_sync>
+			<surface_sync_description>속도 향상용 핵입니다. 체크하면 CPU와 GPU 사이의 서피스 동기화를 끕니다.
+서피스 동기화가 필요한 게임은 일부에 불과합니다.
+끄면 성능이 크게 향상됩니다 (특히 업스케일링 사용 시).</surface_sync_description>
+			<async_pipeline_compilation>비동기 파이프라인 컴파일</async_pipeline_compilation>
+			<async_pipeline_compilation_description>여러 스레드에서 파이프라인을 동시에 컴파일합니다.
+컴파일로 인한 끊김이 줄어드는 대신, 일시적으로 그래픽이 깨질 수 있습니다.</async_pipeline_compilation_description>
+			<nearest>최근접 (Nearest)</nearest>
+			<bilinear>바이리니어 (Bilinear)</bilinear>
+			<bicubic>바이큐빅 (Bicubic)</bicubic>
+			<screen_filter>화면 필터</screen_filter>
+			<screen_filter_description>적용할 후처리 필터를 선택합니다.</screen_filter_description>
+			<internal_resolution_upscaling>내부 해상도 업스케일링</internal_resolution_upscaling>
+			<internal_resolution_upscaling_description>Vita3K의 내부 렌더링 해상도를 높입니다.
+실험적 기능: 1배를 넘기면 게임이 제대로 표시되지 않을 수 있습니다.</internal_resolution_upscaling_description>
+			<anisotropic_filtering>이방성 필터링</anisotropic_filtering>
+			<anisotropic_filtering_description>비스듬히 보이는 표면의 텍스처 화질을
+개선하는 기법입니다.
+화질상 단점은 없지만 성능에 영향을 줄 수 있습니다.</anisotropic_filtering_description>
+			<texture_replacement>텍스처 교체</texture_replacement>
+			<export_textures>텍스처 내보내기</export_textures>
+			<import_textures>텍스처 가져오기</import_textures>
+			<texture_exporting_format>텍스처 내보내기 형식</texture_exporting_format>
+			<shaders>셰이더</shaders>
+			<shader_cache>셰이더 캐시 사용</shader_cache>
+			<shader_cache_description>체크하면 게임 시작 시 셰이더 캐시로 셰이더를 미리 컴파일합니다.
+체크를 해제하면 이 기능을 끕니다.</shader_cache_description>
+			<mapping_method>메모리 매핑 방식</mapping_method>
+			<mapping_method_description>메모리 매핑은 성능을 높이고 메모리 사용량을 줄이며 여러 그래픽 문제를 해결합니다.
+다만 일부 GPU에서는 불안정할 수 있습니다.</mapping_method_description>
+			<spirv_shader>Spir-V 셰이더 사용 (지원 중단)</spirv_shader>
+			<spirv_shader_description>생성한 Spir-V 셰이더를 드라이버에 그대로 전달합니다.
+일부 유용한 확장 기능이 비활성화되며,
+이 방식을 지원하지 않는 GPU도 있습니다.</spirv_shader_description>
+			<clean_shaders>셰이더 캐시 및 로그 삭제</clean_shaders>
+			<fps_hack>FPS 핵</fps_hack>
+			<fps_hack_description>30 FPS로 동작하는 일부 게임을 에뮬레이터에서 60 FPS로 실행하는 핵입니다.
+어디까지나 핵이므로 일부 게임에서만 동작합니다.
+다른 게임에서는 효과가 없거나, 게임 속도가 2배로 빨라질 수 있습니다.</fps_hack_description>
+			<vblank_rate>Vblank 주사율</vblank_rate>
+			<vblank_rate_description>에뮬레이션하는 수직 블랭크(Vblank) 주사율입니다. 기본값: 60 Hz (실기와 동일).
+Vblank에 맞춰 동작하는 게임은 (값 / 60)배속으로 실행됩니다.
+FPS 핵을 켜면 30 FPS 게임이 (값 / 30)배속으로 실행됩니다. 예: 45 Hz = 1.5배속.</vblank_rate_description>
+		</gpu>
+		<audio name="오디오">
+			<audio_backend>오디오 백엔드</audio_backend>
+			<select_audio_backend>사용할 오디오 백엔드를 선택하십시오.</select_audio_backend>
+			<audio_volume>음량</audio_volume>
+			<audio_volume_description>모든 오디오 출력의 음량을 퍼센트 단위로 조절합니다.</audio_volume_description>
+			<enable_ngs_support>NGS 지원 사용</enable_ngs_support>
+			<ngs_description>체크를 해제하면 고급 오디오 라이브러리 NGS 지원을 끕니다.</ngs_description>
+		</audio>
 		<system name="시스템">
+			<select_enter_button>결정 버튼 설정
+'결정'으로 사용할 버튼을 선택하십시오.</select_enter_button>
+			<enter_button_description>애플리케이션의 대화 상자에서 '확인'으로 쓰이는 버튼입니다.
+이 설정을 따르지 않고 기본 확인 버튼을 쓰는 애플리케이션도 있습니다.</enter_button_description>
+			<circle>동그라미 버튼</circle>
+			<cross>엑스 버튼</cross>
+			<pstv_mode>PS TV 모드</pstv_mode>
+			<pstv_mode_description>체크하면 PS TV 에뮬레이션 모드를 켭니다.</pstv_mode_description>
+			<show_mode>쇼 모드</show_mode>
+			<show_mode_description>체크하면 쇼 모드를 켭니다.</show_mode_description>
+			<demo_mode>데모 모드</demo_mode>
+			<demo_mode_description>체크하면 데모 모드를 켭니다.</demo_mode_description>
 		</system>
+		<emulator name="에뮬레이터">
+			<boot_apps_full_screen>앱을 전체 화면으로 실행</boot_apps_full_screen>
+			<trace>추적 (Trace)</trace>
+			<info>정보</info>
+			<warning>경고</warning>
+			<error>오류</error>
+			<critical>치명적 오류</critical>
+			<off>끄기</off>
+			<log_level>로그 레벨</log_level>
+			<select_log_level>기록할 로그 레벨을 선택하십시오.</select_log_level>
+			<archive_log>로그 보관</archive_log>
+			<archive_log_description>체크하면 로그를 보관합니다.</archive_log_description>
+			<discord_rich_presence>Discord Rich Presence를 사용해 실행 중인 애플리케이션을 Discord에 표시합니다.</discord_rich_presence>
+			<texture_cache>텍스처 캐시</texture_cache>
+			<texture_cache_description>체크를 해제하면 텍스처 캐시를 끕니다.</texture_cache_description>
+			<show_compile_shaders>셰이더 컴파일 표시</show_compile_shaders>
+			<compile_shaders_description>체크를 해제하면 셰이더 컴파일 창을 표시하지 않습니다.</compile_shaders_description>
+			<show_touchpad_cursor>터치패드 커서 표시</show_touchpad_cursor>
+			<touchpad_cursor_description>체크를 해제하면 화면에 터치패드 커서를 표시하지 않습니다.</touchpad_cursor_description>
+			<log_compat_warn>호환성 경고 로그</log_compat_warn>
+			<log_compat_warn_description>체크하면 GitHub 호환성 이슈에 따른 경고를 로그에 기록합니다.</log_compat_warn_description>
+			<check_for_updates>업데이트 확인</check_for_updates>
+			<check_for_updates_description>시작할 때 자동으로 업데이트를 확인합니다.</check_for_updates_description>
+			<performance_overlay>성능 오버레이</performance_overlay>
+			<performance_overlay_description>성능 정보를 화면 위에 겹쳐 표시합니다.</performance_overlay_description>
+			<minimum>최소</minimum>
+			<low>낮음</low>
+			<medium>보통</medium>
+			<maximum>최대</maximum>
+			<detail>표시 항목</detail>
+			<select_detail>성능 오버레이에 표시할 정보의 양을 선택하십시오.</select_detail>
+			<top_left>왼쪽 위</top_left>
+			<top_center>가운데 위</top_center>
+			<top_right>오른쪽 위</top_right>
+			<bottom_left>왼쪽 아래</bottom_left>
+			<bottom_center>가운데 아래</bottom_center>
+			<bottom_right>오른쪽 아래</bottom_right>
+			<position>위치</position>
+			<select_position>성능 오버레이를 표시할 위치를 선택하십시오.</select_position>
+			<case_insensitive>대소문자를 구분하는 파일 시스템에서도 대소문자 구분 없이 경로를 찾으려면 체크하십시오.
+재시작하면 초기화됩니다.</case_insensitive>
+			<case_insensitive_description>Windows 이외의 플랫폼에서 대소문자와 관계없이
+파일을 찾도록 시도합니다.</case_insensitive_description>
+			<emu_storage_folder>에뮬레이션 시스템 저장 폴더</emu_storage_folder>
+			<current_emu_path>현재 에뮬레이터 경로:</current_emu_path>
+			<change_emu_path>에뮬레이터 경로 변경</change_emu_path>
+			<change_emu_path_description>Vita3K 에뮬레이터 폴더 경로를 변경합니다.
+기존 폴더는 새 위치로 직접 옮겨야 합니다.</change_emu_path_description>
+			<reset_emu_path>에뮬레이터 경로 초기화</reset_emu_path>
+			<reset_emu_path_description>Vita3K 에뮬레이터 경로를 기본값으로 되돌립니다.
+기존 폴더는 새 위치로 직접 옮겨야 합니다.</reset_emu_path_description>
+			<custom_config_settings>커스텀 설정 관리</custom_config_settings>
+			<clear_custom_config>커스텀 설정 삭제</clear_custom_config>
+		</emulator>
+		<gui name="GUI">
+			<show_gui>GUI 표시</show_gui>
+			<gui_description>체크하면 애플리케이션을 실행한 뒤에도 GUI를 표시합니다.</gui_description>
+			<show_info_bar>정보 표시줄 표시</show_info_bar>
+			<info_bar_description>체크하면 앱 선택 화면에 정보 표시줄을 표시합니다.</info_bar_description>
+			<user_lang>GUI 언어</user_lang>
+			<select_user_lang>사용할 언어를 선택하십시오.</select_user_lang>
+			<display_info_message>알림 메시지 표시</display_info_message>
+			<display_info_message_description>체크를 해제하면 알림 메시지를 로그에만 기록합니다.</display_info_message_description>
+			<display_system_apps>시스템 앱 표시</display_system_apps>
+			<display_system_apps_description>체크를 해제하면 홈 화면에 시스템 앱을 표시하지 않습니다.
+시스템 앱은 메인 메뉴 바에만 표시됩니다.</display_system_apps_description>
+			<show_live_area_screen>라이브 에리어 화면</show_live_area_screen>
+			<live_area_screen_description>체크하면 애플리케이션을 누를 때 라이브 에리어를 먼저 엽니다.
+끄면 애플리케이션을 오른쪽 클릭해서 열 수 있습니다.</live_area_screen_description>
+			<stretch_the_display_area>화면 영역 늘이기</stretch_the_display_area>
+			<stretch_the_display_area_description>체크하면 화면 크기에 맞게 표시 영역을 늘립니다.</stretch_the_display_area_description>
+			<apps_list_grid>그리드 모드</apps_list_grid>
+			<apps_list_grid_description>체크하면 앱 목록을 그리드 형태로 표시합니다.</apps_list_grid_description>
+			<icon_size>앱 아이콘 크기</icon_size>
+			<select_icon_size>아이콘 크기를 선택하십시오.</select_icon_size>
+			<font_support>글꼴 지원</font_support>
+			<asia_font_support>아시아 지역</asia_font_support>
+			<asia_font_support_description>체크하면 중국어와 한국어 글꼴을 지원합니다.
+메모리를 더 사용하며, 적용하려면 에뮬레이터를 재시작해야 합니다.</asia_font_support_description>
+			<firmware_font_package_description>일부 애플리케이션과 GUI의 아시아 지역 글꼴 지원에는
+펌웨어 글꼴 패키지가 필요합니다.
+GUI를 위해서도 설치를 권장합니다.</firmware_font_package_description>
+			<theme_background>테마 &amp; 배경</theme_background>
+			<current_theme_content_id>현재 테마 콘텐츠 ID:</current_theme_content_id>
+			<reset_default_theme>기본 테마로 되돌리기</reset_default_theme>
+			<using_theme_background>테마 배경 사용</using_theme_background>
+			<clean_user_backgrounds>유저 배경 삭제</clean_user_backgrounds>
+			<current_start_background>현재 시작 화면 배경:</current_start_background>
+			<reset_start_background>시작 화면 배경 되돌리기</reset_start_background>
+			<background_alpha>배경 투명도</background_alpha>
+			<select_background_alpha>배경 투명도를 선택하십시오.
+최솟값은 불투명, 최댓값은 완전히 투명합니다.</select_background_alpha>
+			<delay_background>배경 전환 간격</delay_background>
+			<select_delay_background>배경이 바뀌기까지의 시간(초)을 선택하십시오.</select_delay_background>
+			<delay_start>시작 화면 대기 시간</delay_start>
+			<select_delay_start>시작 화면으로 돌아가기까지의 시간(초)을 선택하십시오.</select_delay_start>
+		</gui>
 		<network name="네트워크">
+			<psn_signed_in>PSN 로그인 상태</psn_signed_in>
+			<psn_signed_in_description>체크하면 게임이 유저를 PSN에 로그인한 상태(오프라인)로 인식합니다.</psn_signed_in_description>
+			<enable_http>HTTP 사용</enable_http>
+			<enable_http_description>체크하면 게임이 인터넷에서 HTTP 프로토콜을 사용할 수 있습니다.</enable_http_description>
+			<timeout_attempts>HTTP 타임아웃 재시도 횟수</timeout_attempts>
+			<timeout_attempts_description>서버가 응답하지 않을 때 다시 시도할 횟수입니다.
+인터넷이 매우 불안정하거나 아주 느릴 때 도움이 될 수 있습니다.</timeout_attempts_description>
+			<timeout_sleep>HTTP 타임아웃 대기 시간</timeout_sleep>
+			<timeout_sleep_description>서버가 응답하지 않을 때 다시 시도하기 전까지 기다리는 시간입니다.
+인터넷이 매우 불안정하거나 아주 느릴 때 도움이 될 수 있습니다.</timeout_sleep_description>
+			<read_end_attempts>HTTP 읽기 종료 재시도 횟수</read_end_attempts>
+			<read_end_attempts_description>더 읽을 데이터가 없을 때 다시 시도할 횟수입니다.
+낮추면 성능이 좋아질 수 있지만, 인터넷 상태가 나쁘면 게임이 불안정해질 수 있습니다.</read_end_attempts_description>
+			<read_end_sleep>HTTP 읽기 종료 대기 시간</read_end_sleep>
+			<read_end_sleep_description>더 읽을 데이터가 없을 때 다시 시도하기 전까지 기다리는 시간입니다.
+낮추면 성능이 좋아질 수 있지만, 인터넷 상태가 나쁘면 게임이 불안정해질 수 있습니다.</read_end_sleep_description>
 		</network>
+		<debug>
+			<log_imports>임포트 로깅</log_imports>
+			<log_imports_description>모듈의 임포트 심볼을 로그에 기록합니다.</log_imports_description>
+			<log_exports>익스포트 로깅</log_exports>
+			<log_exports_description>모듈의 익스포트 심볼을 로그에 기록합니다.</log_exports_description>
+			<log_active_shaders>셰이더 로깅</log_active_shaders>
+			<log_active_shaders_description>드로우 콜마다 사용되는 셰이더를 로그에 기록합니다.</log_active_shaders_description>
+			<log_uniforms>유니폼 로깅</log_uniforms>
+			<log_uniforms_description>셰이더 유니폼의 이름과 값을 로그에 기록합니다.</log_uniforms_description>
+			<color_surface_debug>컬러 서피스 저장</color_surface_debug>
+			<color_surface_debug_description>컬러 서피스를 파일로 저장합니다.</color_surface_debug_description>
+			<dump_elfs>ELF 덤프</dump_elfs>
+			<dump_elfs_description>로드된 코드를 ELF 파일로 덤프합니다.</dump_elfs_description>
+			<validation_layer>검증 레이어 (재시작 필요)</validation_layer>
+			<validation_layer_description>Vulkan 검증 레이어를 사용합니다.</validation_layer_description>
+			<unwatch_code>코드 감시 해제</unwatch_code>
+			<watch_code>코드 감시</watch_code>
+			<unwatch_memory>메모리 감시 해제</unwatch_memory>
+			<watch_memory>메모리 감시</watch_memory>
+			<unwatch_import_calls>임포트 호출 감시 해제</unwatch_import_calls>
+			<watch_import_calls>임포트 호출 감시</watch_import_calls>
+		</debug>
+		<save_reboot>저장 후 재시작</save_reboot>
+		<save_apply>저장 후 적용</save_apply>
 		<save>저장</save>
+		<keep_changes>변경 사항을 유지하려면 저장을 누르십시오.</keep_changes>
 	</settings_dialog>
 
 	<sys_apps_title>
