@@ -864,7 +864,18 @@ void draw_ui(GuiState &gui, EmuEnvState &emuenv) {
     const float FONT_SCALE = ImGui::GetIO().DisplaySize.x / emuenv.res_width_dpi_scale;
 
     ImGui::PushFont(gui.vita_font);
-    if ((gui.vita_area.home_screen || !emuenv.io.app_path.empty()) && get_sys_apps_state(gui) && !gui.vita_area.live_area_screen && !gui.vita_area.user_management && (!emuenv.cfg.show_info_bar || !gui.vita_area.information_bar))
+    bool show_menu_bar = (gui.vita_area.home_screen || !emuenv.io.app_path.empty()) && get_sys_apps_state(gui) && !gui.vita_area.live_area_screen && !gui.vita_area.user_management && (!emuenv.cfg.show_info_bar || !gui.vita_area.information_bar);
+    // Auto-hide the menu bar while a game is running: touch the top edge to reveal it, it hides again after a few idle seconds.
+    if (show_menu_bar && !gui.vita_area.home_screen && !emuenv.io.app_path.empty()) {
+        static double menu_bar_last_active = 0.0;
+        const float reveal_height = ImGui::GetFrameHeight() * 1.2f;
+        const float pointer_y = ImGui::GetIO().MousePos.y;
+        if ((pointer_y >= 0.0f && pointer_y <= reveal_height) || ImGui::GetIO().WantCaptureMouse)
+            menu_bar_last_active = ImGui::GetTime();
+        if (ImGui::GetTime() - menu_bar_last_active > 3.0)
+            show_menu_bar = false;
+    }
+    if (show_menu_bar)
         draw_main_menu_bar(gui, emuenv);
 
     if (gui.configuration_menu.custom_settings_dialog || gui.configuration_menu.settings_dialog)
