@@ -30,6 +30,7 @@
 #include <motion/state.h>
 #include <ngs/state.h>
 #include <renderer/state.h>
+#include <renderer/texture_cache.h>
 
 #include <renderer/functions.h>
 #include <rtc/rtc.h>
@@ -503,6 +504,26 @@ bool init(EmuEnvState &state, const Root &root_paths) {
 }
 
 bool late_init(EmuEnvState &state) {
+#ifdef ANDROID
+    // The texture import folder is not reachable from the Android file manager, so seed it with
+    // the bundled Korean font atlas and force texture import on when God of War is booted.
+    if (state.app_path == "PCSA00126") {
+        const fs::path atlas_path = state.shared_path / "textures" / "import" / state.app_path / "4B08A0F88DCF5664.png";
+        if (!fs::exists(atlas_path)) {
+            const std::vector<uint8_t> atlas = fs_utils::read_asset_raw(state.static_assets_path / "kr" / "4B08A0F88DCF5664.png");
+            if (atlas.empty()) {
+                LOG_ERROR("Could not read the bundled Korean font atlas");
+            } else {
+                fs::create_directories(atlas_path.parent_path());
+                fs_utils::dump_data(atlas_path, atlas.data(), atlas.size());
+            }
+        }
+
+        state.cfg.current_config.import_textures = true;
+        state.renderer->get_texture_cache()->set_replacement_state(true, state.cfg.current_config.export_textures, state.cfg.current_config.export_as_png);
+    }
+#endif
+
     // note: mem is not initialized yet but that's not an issue
     // the renderer is not using it yet, just storing it for later uses
     state.renderer->late_init(state.cfg, state.app_path, state.mem);

@@ -78,7 +78,7 @@ enum PerfomanceOverleyPosition {
     code(bool, "async-pipeline-compilation", true, async_pipeline_compilation)                          \
     code(bool, "show-compile-shaders", true, show_compile_shaders)                                      \
     code(bool, "hashless-texture-cache", false, hashless_texture_cache)                                 \
-    code(bool, "import-textures", false, import_textures)                                               \
+    code(bool, "import-textures", true, import_textures)                                                \
     code(bool, "export-textures", false, export_textures)                                               \
     code(bool, "export-as-png", true, export_as_png)                                                    \
     code(std::string, "memory-mapping", "double-buffer", memory_mapping)                                \
