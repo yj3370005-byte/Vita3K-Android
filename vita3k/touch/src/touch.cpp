@@ -55,6 +55,8 @@ static int curr_touch_id[2] = { 0, 0 };
 static int next_touch_id = 1;
 static uint64_t last_vcount[2] = { 0, 0 };
 static bool forceTouchEnabled[2] = { false, false };
+// Set while the user holds the back-touch controller shortcut.
+static bool forced_back_touch = false;
 
 static SceTouchData recover_touch_events(const EmuEnvState &emuenv) {
     SceTouchData touch_data;
@@ -183,8 +185,26 @@ void touch_vsync_update(const EmuEnvState &emuenv) {
         }
     }
 
+    // Inject a press in the middle of the back panel while the controller shortcut is held, so
+    // back-touch prompts can be answered without reaching for the screen.
+    if (forced_back_touch) {
+        SceTouchData *back = &touch_buffers[(touch_buffer_idx + 1) % MAX_TOUCH_BUFFER_SAVED][SCE_TOUCH_PORT_BACK];
+        if (back->reportNum < SCE_TOUCH_MAX_REPORT) {
+            SceTouchReport &rep = back->report[back->reportNum];
+            rep.x = 960; // middle of the 0..1920 range
+            rep.y = 498; // middle of the 108..889 back panel band
+            rep.id = 127;
+            rep.force = 128;
+            back->reportNum++;
+        }
+    }
+
     touch_buffer_idx++;
     touch_buffer_idx %= MAX_TOUCH_BUFFER_SAVED;
+}
+
+void set_forced_back_touch(bool enable) {
+    forced_back_touch = enable;
 }
 
 int handle_touch_event(SDL_TouchFingerEvent &finger) {

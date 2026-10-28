@@ -752,12 +752,11 @@ bool handle_events(EmuEnvState &emuenv, GuiState &gui) {
             if (!emuenv.kernel.is_threads_paused() && (event.cbutton.button == SDL_CONTROLLER_BUTTON_TOUCHPAD))
                 toggle_touchscreen();
 
-            // L3+R3: switch between the front and back touchscreen on pads without a touchpad button.
-            if (!emuenv.kernel.is_threads_paused()
-                && (event.cbutton.button == SDL_CONTROLLER_BUTTON_LEFTSTICK || event.cbutton.button == SDL_CONTROLLER_BUTTON_RIGHTSTICK)) {
+            // Hold L3+R3 to press the middle of the back panel, for pads without a touchpad button.
+            if (event.cbutton.button == SDL_CONTROLLER_BUTTON_LEFTSTICK || event.cbutton.button == SDL_CONTROLLER_BUTTON_RIGHTSTICK) {
                 SDL_GameController *const gc = SDL_GameControllerFromInstanceID(event.cbutton.which);
                 if (gc && SDL_GameControllerGetButton(gc, SDL_CONTROLLER_BUTTON_LEFTSTICK) && SDL_GameControllerGetButton(gc, SDL_CONTROLLER_BUTTON_RIGHTSTICK))
-                    toggle_touchscreen();
+                    set_forced_back_touch(true);
             }
 
             if (ImGui::GetIO().WantTextInput)
@@ -770,6 +769,11 @@ bool handle_events(EmuEnvState &emuenv, GuiState &gui) {
                     break;
                 }
             }
+            break;
+
+        case SDL_CONTROLLERBUTTONUP:
+            if (event.cbutton.button == SDL_CONTROLLER_BUTTON_LEFTSTICK || event.cbutton.button == SDL_CONTROLLER_BUTTON_RIGHTSTICK)
+                set_forced_back_touch(false);
             break;
 
         case SDL_CONTROLLERTOUCHPADDOWN:
