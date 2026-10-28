@@ -105,7 +105,8 @@ void refresh_controllers(CtrlState &state, EmuEnvState &emuenv) {
 
             ++controller;
         } else {
-            state.free_ports[controller->second.port - 1] = true;
+            if (controller->second.port >= 1)
+                state.free_ports[controller->second.port - 1] = true;
             controller = state.controllers.erase(controller);
             state.controllers_num--;
         }
@@ -155,7 +156,8 @@ void refresh_controllers(CtrlState &state, EmuEnvState &emuenv) {
                 found_accel |= new_controller.has_accel;
 
                 state.controllers.emplace(guid, new_controller);
-                state.controllers_name[joystick_index] = SDL_GameControllerNameForIndex(joystick_index);
+                if (new_controller.port >= 1 && new_controller.port <= SCE_CTRL_MAX_WIRELESS_NUM)
+                    state.controllers_name[new_controller.port - 1] = SDL_GameControllerNameForIndex(joystick_index);
                 state.controllers_num++;
             }
         }
@@ -353,7 +355,9 @@ static void retrieve_ctrl_data(EmuEnvState &emuenv, int port, bool is_v2, bool n
         apply_keyboard(&buttons, axes.data(), is_v2, emuenv);
     }
     for (const auto &[_, controller] : state.controllers) {
-        if (controller.port == port) {
+        // 비PSTV Vita에는 패드가 하나뿐이다. 물리 패드든 Android 오버레이의
+        // 가상 조이스틱이든 전부 그 한 포트로 흘려보낸다.
+        if (!emuenv.cfg.current_config.pstv_mode || controller.port == port) {
             apply_controller(emuenv, &buttons, axes.data(), controller.controller.get(), is_v2);
         }
     }
