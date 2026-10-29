@@ -505,18 +505,18 @@ bool init(EmuEnvState &state, const Root &root_paths) {
 
 bool late_init(EmuEnvState &state) {
 #ifdef ANDROID
-    // The texture import folder is not reachable from the Android file manager, so seed it with
-    // the bundled Korean font atlas and force texture import on when God of War is booted.
+    // The texture import folder is not reachable from the Android file manager, so the bundled
+    // Korean font atlas is copied into it when God of War is booted, and texture import is forced
+    // on.  It is copied on every boot: an atlas left behind by an older build would otherwise
+    // never be replaced.
     if (state.app_path == "PCSA00126") {
         const fs::path atlas_path = state.shared_path / "textures" / "import" / state.app_path / "4B08A0F88DCF5664.png";
-        if (!fs::exists(atlas_path)) {
-            const std::vector<uint8_t> atlas = fs_utils::read_asset_raw(state.static_assets_path / "kr" / "4B08A0F88DCF5664.png");
-            if (atlas.empty()) {
-                LOG_ERROR("Could not read the bundled Korean font atlas");
-            } else {
-                fs::create_directories(atlas_path.parent_path());
-                fs_utils::dump_data(atlas_path, atlas.data(), atlas.size());
-            }
+        const std::vector<uint8_t> atlas = fs_utils::read_asset_raw(state.static_assets_path / "kr" / "4B08A0F88DCF5664.png");
+        if (atlas.empty()) {
+            LOG_ERROR("Could not read the bundled Korean font atlas");
+        } else {
+            fs::create_directories(atlas_path.parent_path());
+            fs_utils::dump_data(atlas_path, atlas.data(), atlas.size());
         }
 
         state.cfg.current_config.import_textures = true;
