@@ -752,13 +752,6 @@ bool handle_events(EmuEnvState &emuenv, GuiState &gui) {
             if (!emuenv.kernel.is_threads_paused() && (event.cbutton.button == SDL_CONTROLLER_BUTTON_TOUCHPAD))
                 toggle_touchscreen();
 
-            // Hold L3+R3 to press the middle of the back panel, for pads without a touchpad button.
-            if (event.cbutton.button == SDL_CONTROLLER_BUTTON_LEFTSTICK || event.cbutton.button == SDL_CONTROLLER_BUTTON_RIGHTSTICK) {
-                SDL_GameController *const gc = SDL_GameControllerFromInstanceID(event.cbutton.which);
-                if (gc && SDL_GameControllerGetButton(gc, SDL_CONTROLLER_BUTTON_LEFTSTICK) && SDL_GameControllerGetButton(gc, SDL_CONTROLLER_BUTTON_RIGHTSTICK))
-                    set_forced_back_touch(true);
-            }
-
             if (ImGui::GetIO().WantTextInput)
                 continue;
 
@@ -771,9 +764,16 @@ bool handle_events(EmuEnvState &emuenv, GuiState &gui) {
             }
             break;
 
-        case SDL_CONTROLLERBUTTONUP:
-            if (event.cbutton.button == SDL_CONTROLLER_BUTTON_LEFTSTICK || event.cbutton.button == SDL_CONTROLLER_BUTTON_RIGHTSTICK)
-                set_forced_back_touch(false);
+        case SDL_CONTROLLERAXISMOTION:
+            // Hold L2+R2 to press the middle of the back panel, for pads without a touchpad button.
+            // The triggers are unused on a non-PSTV pad, see apply_controller() in ctrl.cpp.
+            if (event.caxis.axis == SDL_CONTROLLER_AXIS_TRIGGERLEFT || event.caxis.axis == SDL_CONTROLLER_AXIS_TRIGGERRIGHT) {
+                SDL_GameController *const gc = SDL_GameControllerFromInstanceID(event.caxis.which);
+                if (gc)
+                    set_forced_back_touch(
+                        SDL_GameControllerGetAxis(gc, SDL_CONTROLLER_AXIS_TRIGGERLEFT) >= 16384
+                        && SDL_GameControllerGetAxis(gc, SDL_CONTROLLER_AXIS_TRIGGERRIGHT) >= 16384);
+            }
             break;
 
         case SDL_CONTROLLERTOUCHPADDOWN:
